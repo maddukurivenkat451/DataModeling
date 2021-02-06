@@ -1,0 +1,117 @@
+Q: how to get duplicate rows from a table.
+
+Answer: Group by , having count(*) > 1
+
+Q: how to get duplicate rows from a table dont use group by.
+
+Answer: row_number() over (partition by <coulmns need to be grouped> order by <column>) as row_num , in where filter row_num > 1 or depends on requirement
+
+Q: Given below table , how to get second highest max(salary) from emp table
+
+EMPID | DEPT | SALARY | MANAGERID
+1|ECE|20000|5
+2|CSE|20000|4
+3|ECE|60000|4
+4|CSE|50000|null
+5|ECE|30000|null
+6|ECE|60000|5
+
+Answer: 
+
+HINT : SELF join
+
+Q: Given below table , how to get manager less than emp salaray
+
+EMPID | DEPT | SALARY | MANAGERID
+1|ECE|20000|5
+2|CSE|20000|4
+3|ECE|60000|4
+4|CSE|50000|null
+5|ECE|30000|null
+6|ECE|60000|5
+
+Answer: 
+
+HINT : SELF join
+
+Q:
+
+Give two tables , Assign new column and assign "M" for matching rows and "N" for non matching rows
+
+
+Answer :
+
+create table venkat_test1(ID int, pin int);
+create table venkat_test2(ID int, pin int);
+
+select * from venkat_test;
+select * from venkat_test_1;
+
+--delete  from venkat_test;
+
+--drop table venkat_test;
+--drop table venkat_test_1;
+
+insert into venkat_test1 values(1,9467);
+insert into venkat_test1 values(2,9468);
+insert into venkat_test1 values(3,9469);
+
+insert into venkat_test2 values(1,9467);
+insert into venkat_test2 values(2,9468);
+insert into venkat_test2 values(3,9469);
+insert into venkat_test2 values(4,9470);
+
+select *,'A' as active_ind from venkat_test t1 INNER join venkat_test_1 t2 on t1.id = t2.id
+union all
+select *,'O' as active_ind from venkat_test t1 full outer join venkat_test_1 t2 on t1.id = t2.id;
+
+***********************************************************************************************************
+
+Q: Given below table 
+
+Team A 	TeamB 	Winner
+AUS  	IND  	IND 
+ENG  	AUS 	 ENG
+IND  	AUS  	AUS
+AUS  	ENG  	AUS
+ENG  	IND  	IND
+IND  	ENG  	IND
+
+Number of matches each team played
+Number of matches each team Won
+Number of matches each team lost
+
+
+you can answer many ways, i will mention two ways.
+
+Answer 1: 
+
+select 
+x.teama as team, cnt_t1+cnt_t2 as total_matchs, cnt_win as wins, cnt_t1+cnt_t2-cnt_win as lost
+from (
+
+(select teama, count(*) as cnt_t1 from t1 group by teama)x
+inner join 
+(select teamb, count(*) as cnt_t2 from t1 group by teamb)y
+on x.teama = y.teamb
+inner join
+(select winner, count(*) as cnt_win from t1 group by teama)z
+on x.teama = z.winner
+) group by team
+
+***
+
+select win_t + loss_t as num_playeed , sum(win_t) as won ,  sum(loss_t)  as loss
+(
+seelect teama as team
+(case when winner = teama then 1 else 0 end) as win_t,
+(case when winner = teamb then 1 else 0 end) as loss_t,
+from t1
+unionall
+seelect teamb as team
+(case when winner = teamb then 1 else 0 end) as win_t,
+(case when winner = teama then 1 else 0 end) as loss_t,
+from t1) group by team;
+
+***
+
