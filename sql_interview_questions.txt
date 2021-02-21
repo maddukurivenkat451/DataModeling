@@ -115,3 +115,18 @@ from t1) group by team;
 
 ***
 
+MySQL | LEAD() and LAG() Function
+
+The LEAD() and LAG() function in MySQL are used to get preceding and succeeding value of any row within its partition. These functions are termed as nonaggregate Window functions.
+
+The Window functions are those functions which perform operations for each row of the partition or window. These functions produce the result for each query row unlikely to the aggregate functions that group them and results in a single row.
+
+The row on which operation occur is termed as current row.
+The set of rows which are realted to current row or using which function opaerates on current row is termed as Window.
+The LAG() function is used to get value from row that precedes the current row.
+
+The LEAD() function is used to get value from row that succedes the current row.
+
+check some examples
+
+
